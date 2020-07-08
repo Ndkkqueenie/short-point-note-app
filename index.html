@@ -4,7 +4,8 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-     <link rel="stylesheet" href="./style.css">
+    <!--main custom CSS-->
+    <link rel="stylesheet" href="./style.css">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
@@ -12,8 +13,9 @@
     <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
   </head>
   <body>
+      <!--main html begins-->
         <div class="container">
-            <h1 class="app-title">Simple Note App</h1>
+            <!--<h1 class="app-title">Simple Note App</h1>-->
             <span><br><br></span>
                 <!-- input field and button-->
                 <label>Note Text</label>
@@ -22,90 +24,85 @@
                 <span><br><br></span>
                 <label>Note Color</label>
                 <br>
-                <input autofocus type="text" aria-label="Enter a new color item" placeholder="" class="color-note-input">
+                <select id="single">
+                    <option>Red</option>
+                    <option>Blue</option>
+                    <option>Purple</option>
+                    <option>Yellow</option>
+                    <option>Green</option>
+                    <option>Orange</option>
+                </select>
                 <span><br><br></span>
+                <!--<add note btn class="btn-btn">-->
                 <button class="btn-btn">ADD NOTE
                 </button>
                 <span><br><br></span><span><br><br></span>
-                <!--<div class="note-list js-note-list">-->
-                    <div class="card-deck row-cols-1 row-cols-md-3 mb-4">
-                <!-- add the empty state here -->    
-                    </div>
-        
+            <div class="card-deck row-cols-1 row-cols-md-3 mb-4">
+                <!-- add new notes here -->    
+            </div>
         </div>
+        <!--main html ends-->
+  
     <script>
-        $(document).ready(function(){
-  var colors = ['#2d335b', '#535b2d', '#494949', '#d7d7d7', '9ad4ce'];
-  var divs = $('.card');
-
-
-  for (var i = 0; i < divs.length; i++) {
-      var color = colors[i % colors.length];
-
-      $(divs[i]).css('border-color', color);
-  };
-})
-    </script>  
-    <script>
+ // array to will hold the note items       
         let noteItems = [];
-
+// select the current note item in the DOM
         function renderNote(note) {
         localStorage.setItem('noteItems', JSON.stringify(noteItems));
 
         const list = document.querySelector('.card-deck');
         const item = document.querySelector(`[data-key='${note.id}']`);
-        
+// remove the item from the DOM
         if (note.deleted) {
             item.remove();
             if (noteItems.length === 0) list.innerHTML = '';
             return
         }
-
+// Create card in div, create p set attr, set data-key, set the contents of the "card"-p
         const isChecked = note.checked ? 'done': '';
         const node = document.createElement("p");
         node.setAttribute('class', `note-item ${isChecked}`);
         node.setAttribute('data-key', note.id);
-        node.innerHTML = `
-        <div class="card-deck" style="margin-left: 10px">
-        <div class="card">
-            <div class="card-header">Note 
-                <label for="${note.id}" class="tick js-tick"></label>
-                <button class="delete-note js-delete-note">
-                <i class="fa fa-trash" aria-hidden="true"></i>
-    </button></div>
-                            <div class="card-body" id=${note.id}>
-                                <p class="card-text">${note.text}</p>
+        node.innerHTML = ` <div class="card-deck" style="margin-left: 10px">
+                            <div class="card">
+                                <div class="card-header"><b>Note </b>
+                                    <label for="${note.id}" class="tick js-tick"></label>
+                                    <button class="edit-note js-edit-note">
+                                       <i class="fa fa-pencil" aria-hidden="true"></i>
+                                    </button>
+                                    <button class="delete-note js-delete-note">
+                                       <i class="fa fa-trash" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                                <div class="card-body" id=${note.id}>
+                                    <p class="card-text">${note.text}</p>
+                                </div>
+                                <div class="card-footer text-muted" id="demo">${note.id}</div>
                             </div>
-                            <div class="card-footer text-muted" id="demo">
-                                ${note.id}
-        </div>
-                            </div>
-                            </div>
-        `;
-
+                           </div>`;
+// event delegation syntax for card header buttons
         $(document).ready(function () {
-    $('body').on('click','.card-header',function(){ // event delegation syntax
-      $(this).find('button').show();    
-    });
-});
+            $('body').on('click','.card-header',function(){ 
+                $(this).find('button', 'button').show();    
+            });
+            $('button').on('click',function(){
+                $('card-deck').hide;
+            })
+        });
+
 
 // Click on a close button to hide the current list item
-var close = document.getElementsByClassName("delete-note");
-var i;
-for (i = 0; i < close.length; i++) {
-  close[i].onclick = function() {
-    var div = this.parentElement;
-    div.style.display = "none";
-  }
-}
-
+    
+// If the item already exists in the DOM, replace it, otherwise append it 
         if (item) {
             list.replaceChild(node, item);
         } else {
             list.append(node);
         }
         }
-
+// create a new note object based on the
+// text that was entered in the text input, and push it into
+// the `noteItems` array
         function addNote(text) {
         const note = {
             text,
@@ -116,7 +113,8 @@ for (i = 0; i < close.length; i++) {
         noteItems.push(note);
         renderNote(note);
         }
-
+ // find the corresponding note object in the noteItems array       
+// remove the note item from the array by filtering it out
         function deleteNote(key) {
         const index = noteItems.findIndex(item => item.id === Number(key));
         const note = {
@@ -126,7 +124,7 @@ for (i = 0; i < close.length; i++) {
         noteItems = noteItems.filter(item => item.id !== Number(key));
         renderNote(note);
         }
-
+// Select the btn, add event listener, select and get value the text input
         const button = document.querySelector('.btn-btn');
         button.addEventListener('click', event => {
         event.preventDefault();
@@ -140,15 +138,34 @@ for (i = 0; i < close.length; i++) {
         }
         });
 
-        const list = document.querySelector('.card');
+        const list = document.querySelector('card-deck');
         list.addEventListener('click', event => {
         if (event.target.classList.contains('js-delete-note')) {
             const itemKey = event.target.parentElement.dataset.key;
             deleteNote(itemKey);
         }
         });
+        // function to add colors to margin-right card
+       
+                $(document).ready(function(){
+                    var colors = ['red', 'red', 'red', 'red', 'red'];
+                    var divs = $('.card');
+                        for (var i = 0; i < divs.length; i++) {
+                            var color = colors[i % colors.length];
 
-
+                            $(divs[i]).css('border-color', 'b', color);
+                        };
+                })
+        // localStorage
+        document.addEventListener('DOMContentLoaded', () => {
+            const ref = localStorage.getItem('noteItems');
+            if (ref) {
+                noteItems = JSON.parse(ref);
+                noteItems.forEach(t => {
+                renderNote(t);
+                });
+            }
+        });
     </script>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
