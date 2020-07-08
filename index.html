@@ -4,33 +4,147 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
+     <link rel="stylesheet" href="./style.css">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <title>Note App</title>
     <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
   </head>
   <body>
-    <input type="text" id="some">
-    <button type="button" class="btn btn-secondary">Note</button>
-      
-      <div id="newCardHolder">
-      
-      
-      </div>
-      
-      <div id="cardPrototype" class="card" style="display:none;">
-        <div class="card-deck">
-            <div class="card">
-              <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text"></p>
-              </div>
-            </div>
+        <div class="container">
+            <h1 class="app-title">todos</h1>
+                <!-- input field and button-->
+                <input autofocus type="text" aria-label="Enter a new todo item" placeholder="Make notes" class="js-note-input">
+                <span><br><br></span>
+                <input autofocus type="text" aria-label="Enter a new color item" placeholder="" class="color-note-input">
+                <span><br><br></span>
+                <button class="btn-btn">Note
+                </button>
+                <span><br><br></span>
+                <!--<div class="note-list js-note-list">-->
+                    <div class="card-deck row-cols-1 row-cols-md-3 mb-4">
+                <!-- add the empty state here -->    
+                    </div>
+        
         </div>
-      </div>
+    <script>
+        $(document).ready(function(){
+  var colors = ['#2d335b', '#535b2d', '#494949', '#d7d7d7', '9ad4ce'];
+  var divs = $('.card');
 
+
+  for (var i = 0; i < divs.length; i++) {
+      var color = colors[i % colors.length];
+
+      $(divs[i]).css('border-color', color);
+  };
+})
+    </script>  
+    <script>
+        let noteItems = [];
+
+        function renderNote(note) {
+        localStorage.setItem('noteItems', JSON.stringify(noteItems));
+
+        const list = document.querySelector('.card-deck');
+        const item = document.querySelector(`[data-key='${note.id}']`);
+        
+        if (note.deleted) {
+            item.remove();
+            if (noteItems.length === 0) list.innerHTML = '';
+            return
+        }
+
+        const isChecked = note.checked ? 'done': '';
+        const node = document.createElement("p");
+        node.setAttribute('class', `note-item ${isChecked}`);
+        node.setAttribute('data-key', note.id);
+        node.innerHTML = `
+        <div class="card-deck" style="margin-left: 10px">
+        <div class="card">
+            <div class="card-header">Note 
+                <label for="${note.id}" class="tick js-tick"></label>
+                <button class="delete-note js-delete-note">
+                <i class="fa fa-trash" aria-hidden="true"></i>
+    </button></div>
+                            <div class="card-body" id=${note.id}>
+                                <p class="card-text">${note.text}</p>
+                            </div>
+                            <div class="card-footer text-muted" id="demo">
+                                ${note.id}
+        </div>
+                            </div>
+                            </div>
+        `;
+
+        $(document).ready(function () {
+    $('body').on('click','.card-header',function(){ // event delegation syntax
+      $(this).find('button').show();    
+    });
+});
+
+// Click on a close button to hide the current list item
+var close = document.getElementsByClassName("delete-note");
+var i;
+for (i = 0; i < close.length; i++) {
+  close[i].onclick = function() {
+    var div = this.parentElement;
+    div.style.display = "none";
+  }
+}
+
+        if (item) {
+            list.replaceChild(node, item);
+        } else {
+            list.append(node);
+        }
+        }
+
+        function addNote(text) {
+        const note = {
+            text,
+            checked: false,
+            id: new Date(),
+        };
+
+        noteItems.push(note);
+        renderNote(note);
+        }
+
+        function deleteNote(key) {
+        const index = noteItems.findIndex(item => item.id === Number(key));
+        const note = {
+            deleted: true,
+            ...noteItems[index]
+        };
+        noteItems = noteItems.filter(item => item.id !== Number(key));
+        renderNote(note);
+        }
+
+        const button = document.querySelector('.btn-btn');
+        button.addEventListener('click', event => {
+        event.preventDefault();
+        const input = document.querySelector('.js-note-input');
+
+        const text = input.value.trim();
+        if (text !== '') {
+            addNote(text);
+            input.value = '';
+            input.focus();
+        }
+        });
+
+        const list = document.querySelector('.card');
+        list.addEventListener('click', event => {
+        if (event.target.classList.contains('js-delete-note')) {
+            const itemKey = event.target.parentElement.dataset.key;
+            deleteNote(itemKey);
+        }
+        });
+
+
+    </script>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
