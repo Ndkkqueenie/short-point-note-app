@@ -7,7 +7,6 @@
     <!--main custom CSS-->
     <link rel="stylesheet" href="./style.css">
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
@@ -22,7 +21,7 @@
                 <!-- input field and button-->
                 <label>Note Text</label>
                 <br>
-                <input autofocus type="text" aria-label="Enter a new todo item" placeholder="Make notes" class="js-note-input">
+                <input autofocus type="text" aria-label="Enter a new note item" placeholder="Make notes" class="js-note-input">
                 <span><br><br></span>
                 <label>Note Color</label>
                 <br>
@@ -44,12 +43,8 @@
             </div>
         </div>
         <!--main html ends-->
-    <script>
-        function date() {
-        var d = new Date();
-        d = date.toDateString();
-        }
-    </script>
+
+
     <script>
  // array to will hold the note items       
         let noteItems = [];
@@ -67,10 +62,10 @@
         }
 // Create card in div, create p set attr, set data-key, set the contents of the "card"-p
         const isChecked = note.checked ? 'done': '';
-        const node = document.createElement("p");
+        const node = document.createElement("div");
         node.setAttribute('class', `note-item ${isChecked}`);
         node.setAttribute('data-key', note.id);
-        node.innerHTML = ` <div style="margin-left: 10px">
+        node.innerHTML = ` <div style="margin-left: 10px; margin-bottom: 10%">
                             <div class="card">
                                 <div class="card-header"><b>Note </b>
                                     <label for="${note.id}" class="tick js-tick"></label>
@@ -94,12 +89,11 @@
             $('body').on('click','.card',function(){ 
                 $(this).find('button', 'button').show();    
             });
-            $('button').on('click','.card-deck',function(){
-                $('card-deck', item).remove();
+            
+            $('button').on('click', function() {
+            $(event.target).closest('.card').remove();
             })
         });
-
-
 // Click on a close button to hide the current list item
     
 // If the item already exists in the DOM, replace it, otherwise append it 
@@ -117,8 +111,8 @@
         const note = {
             text,
             checked: false,
-            id: Date(),
-            date: d.toDateString()
+            id: Date.now(),
+            date: d.toUTCString()
         };
 
         noteItems.push(note);
@@ -152,7 +146,7 @@
         const list = document.querySelector('.card-deck');
         list.addEventListener('click', event => {
         if (event.target.classList.contains('js-delete-note')) {
-            const itemKey = event.target.Element.dataset.key;
+            const itemKey = event.target.parentElement.dataset.key;
             deleteNote(itemKey);
         }
         });
@@ -180,9 +174,6 @@
     </script>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="node_modules/jquery/dist/jquery.slim.min.js"></script>
-    <script src="node_modules/popper.js/dist/umd/popper.min.js"></script>
-    <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
