@@ -44,13 +44,18 @@
             </div>
         </div>
         <!--main html ends-->
-  
+    <script>
+        function date() {
+        var d = new Date();
+        d = date.toDateString();
+        }
+    </script>
     <script>
  // array to will hold the note items       
         let noteItems = [];
 // select the current note item in the DOM
         function renderNote(note) {
-        localStorage.setItem('noteItems', JSON.stringify(noteItems));
+        localStorage.setItem('noteItemsRef', JSON.stringify(noteItems));
 
         const list = document.querySelector('.card-deck');
         const item = document.querySelector(`[data-key='${note.id}']`);
@@ -65,7 +70,7 @@
         const node = document.createElement("p");
         node.setAttribute('class', `note-item ${isChecked}`);
         node.setAttribute('data-key', note.id);
-        node.innerHTML = ` <div class="card-deck" style="margin-left: 10px">
+        node.innerHTML = ` <div style="margin-left: 10px">
                             <div class="card">
                                 <div class="card-header"><b>Note </b>
                                     <label for="${note.id}" class="tick js-tick"></label>
@@ -79,16 +84,18 @@
                                 <div class="card-body" id=${note.id}>
                                     <p class="card-text">${note.text}</p>
                                 </div>
-                                <div class="card-footer text-muted" id="demo">${note.id}</div>
+                                <div class="card-footer text-muted" id="demo">${note.date}</div>
                             </div>
                            </div>`;
+                           
+        
 // event delegation syntax for card header buttons
         $(document).ready(function () {
-            $('body').on('click','.card-header',function(){ 
+            $('body').on('click','.card',function(){ 
                 $(this).find('button', 'button').show();    
             });
-            $('button').on('click',function(){
-                $('card-deck').hide;
+            $('button').on('click','.card-deck',function(){
+                $('card-deck', item).remove();
             })
         });
 
@@ -106,10 +113,12 @@
 // text that was entered in the text input, and push it into
 // the `noteItems` array
         function addNote(text) {
+        var d = new Date();
         const note = {
             text,
             checked: false,
-            id: new Date(),
+            id: Date(),
+            date: d.toDateString()
         };
 
         noteItems.push(note);
@@ -140,10 +149,10 @@
         }
         });
 
-        const list = document.querySelector('card-deck');
+        const list = document.querySelector('.card-deck');
         list.addEventListener('click', event => {
         if (event.target.classList.contains('js-delete-note')) {
-            const itemKey = event.target.parentElement.dataset.key;
+            const itemKey = event.target.Element.dataset.key;
             deleteNote(itemKey);
         }
         });
@@ -160,7 +169,7 @@
                 })
         // localStorage
         document.addEventListener('DOMContentLoaded', () => {
-            const ref = localStorage.getItem('noteItems');
+            const ref = localStorage.getItem('noteItemsRef');
             if (ref) {
                 noteItems = JSON.parse(ref);
                 noteItems.forEach(t => {
