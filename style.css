@@ -83,6 +83,7 @@ label {
 .card {
   border-left: 5px solid red!important;
   background-color: rgb(240, 240, 240) !important;
+  height: 160px !important;
 }
 b {
   color: red!important;  
@@ -92,13 +93,33 @@ b {
 }
 /*note card header*/
 .card-header {
-  border-bottom: none !important;
+  border-bottom: hidden !important;
   background-color: transparent !important;
+  height: 30px !important;
+  margin-bottom: 10px !important;
+}
+  /* card-body scrollbar width */
+.card-body::-webkit-scrollbar {
+  width: 6px !important;
+}
+/* card-body scrollbar track */
+.card-body::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px floralwhite; 
+  border-radius: 10px;
+}
+/*card-body scrollbar handle */
+.card-body::-webkit-scrollbar-thumb {
+  background: gray !important; 
+  border-radius: 5px;
+}
+/* card-body scrollbar handle on hover */
+.card-body::-webkit-scrollbar-thumb:hover {
+  background: darkgray !important; 
 }
 /* delete note btn and icon*/
 .delete-note {
     width: 10%;
-    height: 20%;
+    height: auto;
     float: right !important;
     border: 1px solid rgb(78, 78, 78);
     border-radius: 3px !important;
@@ -108,7 +129,7 @@ b {
 }
 .edit-note {
   width: 10%;
-  height: 20%;
+  height: auto;
   margin-left: 30% !important;
   border: 1px solid rgb(78, 78, 78);
   border-radius: 3px !important;
