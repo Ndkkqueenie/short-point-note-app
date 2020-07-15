@@ -1,2 +1,2 @@
-# short-point-note-app
-ShortPoint Front-end Developer Assessment
+# note-app
+Note taking app
